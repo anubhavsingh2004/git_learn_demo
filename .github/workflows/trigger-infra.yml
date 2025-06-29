@@ -1,0 +1,15 @@
+name: Trigger Infra Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  call-lambda:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Lambda
+        run: |
+          curl -X POST "https://abc123xyz.execute-api.us-east-1.amazonaws.com/run-script?action=POST" \
+          -H "x-api-key: ${{ secrets.XAPI_KEY }}"
