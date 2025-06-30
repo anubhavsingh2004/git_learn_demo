@@ -1,15 +1,18 @@
-name: Trigger Infra Lambda
+name: Trigger Lambda on PR Merge
 
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches:
       - main
 
 jobs:
   call-lambda:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+
     steps:
-      - name: Trigger Lambda
+      - name: Call AWS Lambda via API Gateway
         run: |
-          curl -X POST "https://abc123xyz.execute-api.us-east-1.amazonaws.com/run-script?action=POST" \
-          -H "x-api-key: ${{ secrets.XAPI_KEY }}"
+          curl -X POST "https://te91kgj42d.execute-api.us-east-1.amazonaws.com/run-script?action=POST" \
+            -H "x-api-key: ${{ secrets.XAPI_KEY }}"
