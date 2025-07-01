@@ -14,5 +14,5 @@ jobs:
     steps:
       - name: Call AWS Lambda via API Gateway
         run: |
-          curl -X POST "https://te91kgj42d.execute-api.us-east-1.amazonaws.com/run-script?action=POST" \
+          curl -X POST "https://b5cfhbnrlk.execute-api.us-east-1.amazonaws.com/run-script" \
             -H "x-api-key: ${{ secrets.XAPI_KEY }}"
