@@ -1,27 +1,31 @@
 import json
-import subprocess
 import os
+from setup_redis import create_redis_cluster
+
 
 def lambda_handler(event, context):
-    query = event.get("queryStringParameters", {})
+    query = event.get("queryStringParameters", {}) or {}
     action = query.get("action", "POST")
 
-    headers = event.get("headers", {})
+    headers = event.get("headers", {}) or {}
     if headers.get("x-api-key") != os.environ['XAPI_KEY']:
-        return { "statusCode": 403, "body": "Forbidden: Invalid XAPI Key" }
+        return {
+            "statusCode": 403,
+            "body": "Forbidden: Invalid XAPI Key"
+        }
+
+    if action != "POST":
+        return {
+            "statusCode": 400,
+            "body": f"Unsupported action: {action}"
+        }
 
     try:
-        if action == "POST":
-            result = subprocess.run(["/var/task/dummy_script.sh"], capture_output=True, text=True)
-            return {
-                "statusCode": 200,
-                "body": f"Script output: {result.stdout}"
-            }
-        else:
-            return {
-                "statusCode": 400,
-                "body": f"Unsupported action: {action}"
-            }
+        result = create_redis_cluster()
+        return {
+            "statusCode": 200,
+            "body": f"Script output: {result}"
+        }
     except Exception as e:
         return {
             "statusCode": 500,

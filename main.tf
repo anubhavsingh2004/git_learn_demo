@@ -23,11 +23,11 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 }
 
 resource "aws_lambda_function" "run_infra_script" {
-  filename         = "lambda.zip"
+  filename         = "lambda_function.zip" # ✅ updated
   function_name    = "runInfraScriptOnMerge"
   role             = aws_iam_role.lambda_exec_role.arn
   handler          = "lambda_function.lambda_handler"
-  source_code_hash = filebase64sha256("lambda.zip")
+  source_code_hash = filebase64sha256("lambda_function.zip") # ✅ updated
   runtime          = "python3.12"
   timeout          = 30
 
